@@ -1,0 +1,12 @@
+{
+	"manifest_version": 1,
+	"id": "com.foaman.BetterTasks",
+	"app_min_version": "1.8.1",
+	"version": "1.0.0",
+	"name": "BetterTasks",
+	"description": "create beter tasks with todos",
+	"author": "foaman",
+	"homepage_url": "",
+	"repository_url": "",
+	"keywords": []
+}
