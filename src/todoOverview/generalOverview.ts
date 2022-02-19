@@ -1,11 +1,13 @@
 import {getRequiredFields, search} from "./searchFns";
 import Mustache = require("mustache");
 import * as YAML from "yaml";
-
+import * as moment from "moment";
+import {applyAdditionalFunction, applyMetaData} from "./renderFunctions";
 export async function getOverviewContent(
     currentNote: any,
     settings: any
 ): Promise<string[]> {
+    console.log(moment.unix(19232).format("MM/DD/YYYY"));
     const query: string = settings["search"];
     let pageQueryNotes = 1;
     let queryNotes = null;
@@ -17,7 +19,8 @@ export async function getOverviewContent(
             await filterAndRender(
                 queryNotes.items,
                 settings["template"],
-                settings["filter"]
+                settings["filter"],
+                settings["adjustmentFns"]
             )
         );
 
@@ -26,25 +29,18 @@ export async function getOverviewContent(
     return entrys
 }
 
-export async function filterAndRender(pages: any, template:any, filter:any) {
-    console.log(filter)
-    let yamlMatch =/(```\s?yaml(?<yaml>[\w\W]*?)```)?/gi;
-    pages = pages.map(obj=> {
-        let match = yamlMatch.exec(obj.body)
-        console.log(match)
 
-        if(match["groups"]["yaml"] != null){
-            let metaData = YAML.parse(match["groups"]["yaml"]);
-            console.log(metaData)
-            obj = { ...obj, ...metaData }
-        }
-        return obj
-    });
+
+export async function filterAndRender(pages: any, template:any, filter:any,adjustmentFns:any) {
+    console.log(filter)
+
+    pages = pages.map(obj=> applyMetaData(obj));
 
     if(filter){
-        var fn = Function("x", filter);
-        pages = pages.filter(x=> fn(x))
+        var fn = Function("moment", "x", filter);
+        pages = pages.filter(x=> fn(moment,x))
     }
+    pages = applyAdditionalFunction(adjustmentFns, pages)
 
     console.log("postPAges", pages)
     pages = pages.map(page=> {

@@ -3,6 +3,8 @@ import * as YAML from "yaml";
 import {getSubNoteContent} from "./bodyAdjustmentHelper";
 import Mustache = require("mustache");
 import {getRequiredFields, reduceToJoplinSpecificFields, search} from "./searchFns";
+import moment = require("moment");
+import {applyMetaData} from "./renderFunctions";
 
 
 
@@ -23,7 +25,8 @@ export async function getTaskOverviewContent(
                 await getTodoFromBody(
                     queryNotes.items[queryNotesKey],
                     settings["template"],
-                    settings["filter"]
+                    settings["filter"],
+                    settings["adjustmentFns"]
                 )
             );
         }
@@ -31,30 +34,33 @@ export async function getTaskOverviewContent(
     return entrys
 }
 
-export async function getTodoFromBody(item: any, template:any, filter:any) {
+export async function getTodoFromBody(item: any, template:any, filter:any,adjustmentFns:any) {
     console.log(filter)
-
+    item = applyMetaData(item);
     let tasks = item["body"].split("\n");
-    console.log("preTID", tasks)
+
     tasks = tasks.filter(x=> (x.includes("- [ ]")||
                              x.includes("- [x]"))&&
                              !x.includes("TID"))
-    console.log("pstTId", tasks)
+    let fn = null
     if(filter){
-        var fn = Function("x", filter);
-        tasks = tasks.filter(x=> fn(x))
+        fn = Function("moment", "x", filter);
     }
     console.log(tasks)
-    tasks = tasks.map(task=> {
+    let newTasks = [];
+    tasks.forEach(task=> {
+
         item["todo"] = task
-        let rendered = Mustache.render(template, item)
-        //Include Page ID so that we can always keep the task in sync with its master
-        rendered = rendered + "<!--TID" + item["id"] +"TID-->"
-        //Include raw task info so task in sync with its master
-        rendered = rendered + "<!--TRAW" + item["todo"] +"TRAW-->"
-        return rendered
+        if(fn && fn(moment, item)){
+            let rendered = Mustache.render(template, item)
+            //Include Page ID so that we can always keep the task in sync with its master
+            rendered = rendered + "<!--TID" + item["id"] +"TID-->"
+            //Include raw task info so task in sync with its master
+            rendered = rendered + "<!--TRAW" + item["todo"] +"TRAW-->"
+            newTasks.push(rendered)
+        }
     })
 
 
-    return tasks;
+    return newTasks;
 }

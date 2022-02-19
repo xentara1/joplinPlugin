@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@types/mustache": "^4.1.2",
+    "moment": "^2.29.1",
     "mustache": "^4.2.0",
     "yaml": "^1.10.2"
   }

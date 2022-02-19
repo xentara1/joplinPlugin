@@ -3,12 +3,13 @@ import joplin from "../../api";
 let joplinFields = ["id","parent_id","title","body","created_time","updated_time","is_conflict","latitude","longitude","altitude","author","source_url","is_todo","todo_due","todo_completed","source","source_application","application_data","order","user_created_time","user_updated_time","encryption_cipher_text","encryption_applied","markup_language","is_shared","share_id","conflict_original_id","master_key_id","body_html","base_url","image_data_url","crop_rect"]
 
 export function getRequiredFields(settings: any) {
-    let fieldRegEx = /{{([a-zA-Z]*?)}}/gi
+    let fieldRegEx = /{{([a-zA-Z_]*?)}}/gi
     let match = null
     let fields = []
     while ((match = fieldRegEx.exec(settings["template"])) != null) {
         fields.push(match[1]);
     }
+    console.log("fields", fields)
     return fields;
 }
 
