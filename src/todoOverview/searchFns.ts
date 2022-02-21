@@ -22,7 +22,7 @@ export function reduceToJoplinSpecificFields(fields: any[]) {
     return queryFields;
 }
 
-export async function search(query: string, queryFields: any[], pageNo: number) {
+export async function search(query: string, queryFields: any[], pageNo: number, includeCurrent) {
     queryFields = reduceToJoplinSpecificFields(queryFields);
     let res =  await joplin.data.get(["search"], {
         query: query,
@@ -32,6 +32,9 @@ export async function search(query: string, queryFields: any[], pageNo: number) 
     });
     //Potential performance hit?
     const note = await joplin.workspace.selectedNote();
-    res.items = res.items.filter(x=> x["id"]!== note["id"])
+    if(!includeCurrent){
+        res.items = res.items.filter(x=> x["id"]!== note["id"])
+    }
+
     return res
 }

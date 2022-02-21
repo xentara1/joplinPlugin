@@ -12,7 +12,7 @@ export async function createNewProject() {
     let userQuery = null
     let users = []
     do {
-        userQuery = await search("tag:profile",["title","id"], pageQueryNotes);
+        userQuery = await search("tag:profile",["title","id"], pageQueryNotes, true);
         console.log(userQuery)
         users.push(... userQuery.items );
     }while (userQuery.has_more);
@@ -37,6 +37,7 @@ export async function createNewProject() {
     while(user["value"]!="NA"){
         user = (await joplin.commands.execute("showPrompt", {
             label: "Team",
+            value:{label:"NA", value:"NA"},
             inputType: "dropdown",
             autocomplete: users
         }))["answer"];
@@ -45,9 +46,9 @@ export async function createNewProject() {
     vars["managed"] = (await joplin.commands.execute("showPrompt", {
         label: "Do You Manage",
         inputType: "dropdown",
-        value: "YES",
+        value: {label:"NO", value:"NO"},
         autocomplete: [{label:"YES", value:"YES"},{label:"NO", value:"NO"}]
-    }))["answer"]["label"];
+    }))["answer"]["value"];
     team = team.filter(x=> x.value !== "NA")
     vars["team"] = team
     vars["tag"] ="{{"
@@ -82,13 +83,13 @@ export async function createNewPerson() {
     vars["nationality"] = (await joplin.commands.execute("showPrompt", {
         label: "Nationality",
         inputType: "text",
-    }))["answer"]["value"];
-    vars["managed"] = await joplin.commands.execute("showPrompt", {
+    }))["answer"];
+    vars["managed"] = (await joplin.commands.execute("showPrompt", {
         label: "Do You Manage",
         inputType: "dropdown",
-        value: "YES",
+        value: {label:"NO", value:"NO"},
         autocomplete: [{label:"YES", value:"YES"},{label:"NO", value:"NO"}]
-    })["answer"]["label"];
+    }))["answer"]["value"];
     vars["tag"] ="{{"
     vars["ctag"] ="}}"
     console.log(vars)
@@ -160,7 +161,7 @@ export async function createNewMeeting() {
     let query = null
     let users = []
     do {
-        query = await search("tag:profile",["title","id"], pageQueryNotes);
+        query = await search("tag:profile",["title","id"], pageQueryNotes, true);
         console.log(query)
         users.push(... query.items );
     }while (query.has_more);
@@ -171,7 +172,7 @@ export async function createNewMeeting() {
     query = null
     let projects = []
     do {
-        query = await search("tag:project",["title","id"], pageQueryNotes);
+        query = await search("tag:project",["title","id"], pageQueryNotes, true);
         console.log(query)
         projects.push(... query.items );
     }while (query.has_more);

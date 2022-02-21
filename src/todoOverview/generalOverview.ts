@@ -14,7 +14,7 @@ export async function getOverviewContent(
     const entrys: string[] = [];
     let fields = getRequiredFields(settings);
     do {
-        queryNotes = await search(query, fields, pageQueryNotes++);
+        queryNotes = await search(query, fields, pageQueryNotes++, false);
         entrys.push(...
             await filterAndRender(
                 queryNotes.items,

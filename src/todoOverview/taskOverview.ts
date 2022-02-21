@@ -19,7 +19,7 @@ export async function getTaskOverviewContent(
     const entrys: string[] = [];
     let fields = getRequiredFields(settings);
     do {
-        queryNotes = await search(query, fields, pageQueryNotes++);
+        queryNotes = await search(query, fields, pageQueryNotes++, false);
         for (let queryNotesKey in queryNotes.items) {
             entrys.push(...
                 await getTodoFromBody(

@@ -10,6 +10,9 @@ joplin.plugins.register({
 		await joplin.workspace.onNoteChange(() => {
 			updateTodos()
 		});
+		await joplin.workspace.onNoteSelectionChange(() => {
+			createOverview()
+		});
 		await joplin.commands.register({
 			name: "UpdateTaskBlocks",
 			label: "Update Task Block",
