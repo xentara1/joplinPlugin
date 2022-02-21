@@ -13,17 +13,17 @@ export const profile = "```yaml\n" +
     "\n" +
     "<!-- jat\n" +
     "search: tag:project\n" +
-    "filter: \"return x.team.includes('{{name}}')\"\n" +
+    "filter: \"return x.people.includes('{{name}}')\"\n" +
     "adjustmentFns: \n" +
     "  created_time: \"return moment.unix(x/1000).format('MM/DD/YYYY') \"\n" +
-    "template: \"{{tag}}title{{ctag}} {{tag}}team{{ctag}}\t{{tag}}created_time{{ctag}}\t[:link:](:/{{tag}}id{{ctag}})|\"\n" +
+    "template: \"|Title|Team|Time|Link|\\n|---|---|---|---|\\n{{tag}}#pages{{ctag}}|{{tag}}title{{ctag}}|{{tag}}people{{ctag}}|{{tag}}created_time{{ctag}}|[{{tag}}title{{ctag}}](:/{{tag}}id{{ctag}})|\\n{{tag}}/pages{{ctag}}\"\n" +
     "-->\n" +
     "<!--JATOUT-->\n" +
     "\n" +
     "# Key Updates\n" +
     "<!-- jat\n" +
     "search: tag:profile/{{name}}\n" +
-    "filter: \"return x.todo.includes('#update')  && x.type == 'personalNote'\"\n" +
+    "filter: \"return x.todo.includes('#update') && x.todo.includes('[ ]') && x.type == 'personalNote'\"\n" +
     "type: Task\n" +
     "template: \"{{tag}}todo{{ctag}} [:link:](:/{{tag}}id{{ctag}})\"\n" +
     "-->\n" +
@@ -32,7 +32,7 @@ export const profile = "```yaml\n" +
     "# ToDos\n" +
     "<!-- jat\n" +
     "search: tag:profile/{{name}}\n" +
-    "filter: \"return x.todo.includes('#task')  && x.type == 'personalNote'\"\n" +
+    "filter: \"return x.todo.includes('#task') && x.todo.includes('[ ]') && x.type == 'personalNote'\"\n" +
     "type: Task\n" +
     "template: \"{{tag}}todo{{ctag}} [:link:](:/{{tag}}id{{ctag}})\"\n" +
     "-->\n" +
@@ -44,14 +44,14 @@ export const profile = "```yaml\n" +
     "filter: \"return x.type == 'personalNote'\"\n" +
     "adjustmentFns: \n" +
     "  created_time: \"return moment.unix(x/1000).format('MM/DD/YYYY') \"\n" +
-    "template: \"{{tag}}title{{ctag}} | {{tag}}created_time{{ctag}} [:link:](:/{{tag}}id{{ctag}})\"\n" +
+    "template: \"|Title|People|Time|Link|\\n|---|---|---|---|\\n{{tag}}#pages{{ctag}}|{{tag}}title{{ctag}}|{{tag}}people{{ctag}}|{{tag}}created_time{{ctag}}|[{{tag}}title{{ctag}}](:/{{tag}}id{{ctag}})|\\n{{tag}}/pages{{ctag}}\"\n" +
     "-->\n" +
     "<!--JATOUT-->"
 
 export const project = "```yaml\n" +
     "name: {{name}}\n" +
     "lead: {{lead.label}}\n" +
-    "team: {{#team}}{{label}},{{/team}}\n" +
+    "people: {{#team}}{{label}},{{/team}}\n" +
     "managed: {{managed}}\n" +
     "Archived: NO\n" +
     "```\n" +
@@ -65,7 +65,7 @@ export const project = "```yaml\n" +
     "# Key Updates\n" +
     "<!-- jat\n" +
     "search: tag:project/{{name}}\n" +
-    "filter: \"return x.todo.includes('#update')\"\n" +
+    "filter: \"return x.todo.includes('#update')&& x.todo.includes('[ ]')\"\n" +
     "type: Task\n" +
     "template: \"{{tag}}todo{{ctag}} [:link:](:/{{tag}}id{{ctag}})\"\n" +
     "-->\n" +
@@ -85,7 +85,7 @@ export const project = "```yaml\n" +
     "filter: \"return x.type == 'projectNote'\"\n" +
     "adjustmentFns: \n" +
     "  created_time: \"return moment.unix(x/1000).format('MM/DD/YYYY') \"\n" +
-    "template: \"{{tag}}title{{ctag}} | {{tag}}created_time{{ctag}} [:link:](:/{{tag}}id{{ctag}})\"\n" +
+    "template: \"|Title|Team|Time|Link|\\n|---|---|---|---|\\n{{tag}}#pages{{ctag}}|{{tag}}title{{ctag}}|{{tag}}people{{ctag}}|{{tag}}created_time{{ctag}}|[{{tag}}title{{ctag}}](:/{{tag}}id{{ctag}})|\\n{{tag}}/pages{{ctag}}\"\n" +
     "-->\n" +
     "<!--JATOUT-->\n"
 

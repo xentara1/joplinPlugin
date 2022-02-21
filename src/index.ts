@@ -2,16 +2,19 @@ import joplin from 'api';
 import {updateTodos} from "./todoOverview/taskState";
 import {MenuItemLocation} from "../api/types";
 import {createOverview} from "./todoOverview/overviewFactory";
-import {createNewMeeting, createNewPerson, createNewProject} from "./todoOverview/createTemplate";
+import {
+	createNewMeeting,
+	createNewPerson,
+	createNewProject,
+	createNewZettle, createTask,
+	createUpdate
+} from "./todoOverview/createTemplate";
 
 joplin.plugins.register({
 	onStart: async function() {
 		console.log("HELLO")
 		await joplin.workspace.onNoteChange(() => {
 			updateTodos()
-		});
-		await joplin.workspace.onNoteSelectionChange(() => {
-			createOverview()
 		});
 		await joplin.commands.register({
 			name: "UpdateTaskBlocks",
@@ -41,6 +44,27 @@ joplin.plugins.register({
 				await createNewMeeting()
 			},
 		});
+		await joplin.commands.register({
+			name: "createNewZettle",
+			label: "createNewZettle",
+			execute: async () => {
+				await createNewZettle()
+			},
+		});
+		await joplin.commands.register({
+			name: "createUpdate",
+			label: "createUpdate",
+			execute: async () => {
+				await createUpdate()
+			},
+		});
+		await joplin.commands.register({
+			name: "createTask",
+			label: "createTask",
+			execute: async () => {
+				await createTask()
+			},
+		});
 		await joplin.views.menuItems.create(
 			"UpdateTaskBlocks",
 			"UpdateTaskBlocks",
@@ -59,6 +83,19 @@ joplin.plugins.register({
 			{
 				commandName: "createNewMeeting",
 				accelerator: "Alt+Shift+M"
+			}
+			,
+			{
+				commandName: "createNewZettle",
+				accelerator: "Alt+Shift+Z"
+			},
+			{
+				commandName: "createTask",
+				accelerator: "Alt+Shift+t"
+			},
+			{
+				commandName: "createUpdate",
+				accelerator: "Alt+Shift+u"
 			}
 			]);
 

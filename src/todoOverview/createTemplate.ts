@@ -218,13 +218,13 @@ export async function createNewMeeting() {
     let rendered = Mustache.render(meeting, vars);
     let folderId = "";
     if(vars["type"] == "personalNote"){
-        folderId = await getNotebook("Project Notes")
+        folderId = await getNotebook("Profile Notes")
     }
     else{
-        folderId = await getNotebook("Personal Notes")
+        folderId = await getNotebook("Project Notes")
     }
 
-    let body = { body: rendered, parent_id: folderId, title: vars["name"]};
+    let body = { body: rendered, parent_id: folderId, title: moment().unix().toString() + " " +vars["name"]};
     console.log(body)
     const note = await joplin.data.post(["notes"], null, body);
     console.log(note)
@@ -232,4 +232,27 @@ export async function createNewMeeting() {
     let tags = ["note", "project/" + vars["project"].label]
     team.forEach(x=> tags.push("profile/"+ x["label"]))
     tags.forEach(x=> (getAnyTagWithTitle(x)).then(tag=>applyTagToNote(tag.id, note.id)));
+}
+
+export async function createNewZettle() {
+
+    let vars = {}
+    vars["name"] = (await joplin.commands.execute("showPrompt", {
+        label: "Name",
+        inputType: "text",
+    }))["answer"];
+    let folderId = await getNotebook("Bulk Notes")
+    let body = { body: "", parent_id: folderId, title: moment().unix().toString() + " " +vars["name"]};
+    const note = await joplin.data.post(["notes"], null, body);
+    console.log(note)
+    let text = Mustache.render("[{{title}}](:/{{id}})", {title: vars["name"], id: note.id})
+    await joplin.commands.execute("replaceSelection", text);
+    await joplin.commands.execute("openNote", note.id);
+}
+
+export async function createUpdate() {
+    await joplin.commands.execute("replaceSelection", "#update\n");
+}
+export async function createTask() {
+    await joplin.commands.execute("replaceSelection", "#task\n");
 }

@@ -20,7 +20,8 @@ export async function getOverviewContent(
                 queryNotes.items,
                 settings["template"],
                 settings["filter"],
-                settings["adjustmentFns"]
+                settings["adjustmentFns"],
+                settings["group"]
             )
         );
 
@@ -31,8 +32,8 @@ export async function getOverviewContent(
 
 
 
-export async function filterAndRender(pages: any, template:any, filter:any,adjustmentFns:any) {
-    console.log(filter)
+export async function filterAndRender(pages: any, template:any, filter:any,adjustmentFns:any, group:any) {
+    console.log(group)
 
     pages = pages.map(obj=> applyMetaData(obj));
 
@@ -43,9 +44,14 @@ export async function filterAndRender(pages: any, template:any, filter:any,adjus
     pages = applyAdditionalFunction(adjustmentFns, pages)
 
     console.log("postPAges", pages)
-    pages = pages.map(page=> {
-        let rendered = Mustache.render(template, page)
-        return rendered
-    })
-    return pages;
+    let rendered = [];
+    if(group) {
+        rendered = pages.map(page => {
+            let rendered = Mustache.render(template, page)
+            return rendered
+        })
+    }else {
+        rendered = [Mustache.render(template, {pages: pages})]
+    }
+    return rendered;
 }
