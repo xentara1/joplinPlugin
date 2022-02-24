@@ -15,6 +15,7 @@ export async function createNewProject() {
         userQuery = await search("tag:profile",["title","id"], pageQueryNotes, true);
         console.log(userQuery)
         users.push(... userQuery.items );
+        pageQueryNotes++
     }while (userQuery.has_more);
     console.log("out")
     users = users.map(x=> ({label:x.title , value:x.id}))
@@ -164,6 +165,7 @@ export async function createNewMeeting() {
         query = await search("tag:profile",["title","id"], pageQueryNotes, true);
         console.log(query)
         users.push(... query.items );
+        pageQueryNotes++
     }while (query.has_more);
     users = users.map(x=> ({label:x.title , value:x.id}))
     users.unshift({label:"NA", value:"NA"})
@@ -175,6 +177,7 @@ export async function createNewMeeting() {
         query = await search("tag:project",["title","id"], pageQueryNotes, true);
         console.log(query)
         projects.push(... query.items );
+        pageQueryNotes++
     }while (query.has_more);
     projects = projects.map(x=> ({label:x.title , value:x.id}))
     projects.unshift({label:"NA", value:"NA"})
